@@ -86,7 +86,7 @@ class WesanoxMatrixBasic extends WireData implements Module
      * @throws WireException
      * @throws WirePermissionException
      */
-    public function ___install() :void
+    public function ___install(): void
     {
         /**
          * Install internal modules
