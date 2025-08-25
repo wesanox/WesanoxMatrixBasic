@@ -1,0 +1,201 @@
+<?php
+
+namespace ProcessWire;
+
+class WesanoxMatrixBasic extends WireData implements Module
+{
+    public static function getModuleInfo()
+    {
+        return array(
+            'title' => 'wesanox Basic Matrix',
+            'summary' => 'The Matrix Helper Module for Processwire made by wesanox. It creates the Basic Matrix.',
+            'version' => '0.1.1',
+            'author' => 'Frittenfritze',
+            'href' => 'https://wesanox.de',
+            'icon' => 'codepen',
+            'singular' => true,
+            'autoload' => true,
+            'installs' => ['PageFrontEdit', 'CroppableImage3','WesanoxFrameworkPackage','WesanoxMatrixContent'],
+            'requires' => array(
+                'ProcessWire>=3.0.210',
+                'PHP>=8.0.0',
+                'FieldtypeRepeaterMatrix>=0.0.9',
+                'WesanoxFrameworkPackage>=0.0.1',
+                'WesanoxMatrixContent>=0.1.1',
+                'WesanoxHelperClasses>=0.0.1',
+                'WesanoxHelperFields>=0.0.1',
+            ),
+        );
+    }
+
+
+    /**
+     * @var array|string[] $internal_modules
+     */
+    protected array $internal_modules = [
+        'PageFrontEdit'
+    ];
+
+    /**
+     * @var array|string[] $external_modules
+     */
+    protected array $external_modules = [
+        'CroppableImage3' => 'https://github.com/horst-n/CroppableImage3/archive/master.zip',
+        'WesanoxFrameworkPackage' => 'https://github.com/wesanox/WesanoxFrameworkPackage/archive/refs/heads/main.zip',
+        'WesanoxMatrixContent' => 'https://github.com/wesanox/WesanoxMatrixContent/archive/refs/heads/main.zip',
+        'WesanoxHelperFields' => 'https://github.com/wesanox/WesanoxHelperFields/archive/refs/heads/main.zip',
+        'WesanoxHelperClasses' => 'https://github.com/wesanox/WesanoxHelperClasses/archive/refs/heads/main.zip',
+    ];
+
+    /**
+     * @var Module|_Module|null $helper_classes
+     * @var Module|_Module|null $helper_fields
+     */
+    protected Module|_Module|null $helper_fields;
+    protected Module|_Module|null $helper_classes;
+
+    /**
+     * @var array $fields_array
+     */
+    protected array $fields_array = [];
+
+    /**
+     * @var array $templates_basic
+     */
+    protected array $templates_basic = [
+        'basic'
+    ];
+
+    /**
+     * @throws WirePermissionException
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->helper_classes = $this->modules->get('WesanoxHelperClasses');
+        $this->helper_fields = $this->modules->get('WesanoxHelperFields');
+
+        $this->fields_array = include $this->config->paths->WesanoxMatrixBasic . 'config/fields.php';
+    }
+
+    /**
+     * install function for the modul
+     *
+     * @return void
+     * @throws WireException
+     * @throws WirePermissionException
+     */
+    public function ___install() :void
+    {
+        /**
+         * Install internal modules
+         */
+        foreach ($this->internal_modules as $module_name) {
+            if (!$this->modules->isInstalled($module_name)) {
+                $this->modules->get($module_name);
+            }
+        }
+
+        /**
+         * Install external modules
+         */
+        foreach ($this->external_modules as $module_name => $module_url) {
+            if (!$this->modules->isInstalled($module_name)) {
+                $message = $this->helper_classes->downloadInstall($module_name, $module_url);
+                if ($message !== true) $this->error($message);
+            }
+        }
+
+        /**
+         * create fields
+         */
+        foreach ($this->fields_array as $field_array) {
+            $this->helper_fields->createFields($field_array);
+        }
+
+        /**
+         * if not exists, create content only Page
+         */
+        foreach ($this->templates_basic as $template_basic) {
+            $file = $this->config->paths->WesanoxMatrixBasic . 'src/templates/template_' . $template_basic . '.php';
+            $file_target = $this->config->paths->templates . 'template_' . $template_basic . '.php';
+
+            if (!is_file($file_target)) {
+                $this->files->copy($file, $file_target);
+            }
+
+            if ( !$this->templates->get('template_' . $template_basic) ) {
+                if($this->templates->get('basic-page')) {
+                    $t = $this->templates->get('basic-page');
+                    $t->name = 'template_' . $template_basic;
+                    $t->label = 'Template Basic';
+                    $t->icon = 'Circle o';
+                    $t->tags = 'Templates';
+                    $t->save();
+
+                    $fg = $t->fieldgroup;
+                    $fg->add('matrix_basic');
+                    $fg->save();
+                } else {
+                    $fg = new Fieldgroup();
+                    $fg->name = 'template_' . $template_basic;
+                    $fg->add('title');
+                    $fg->add('matrix_basic');
+                    $fg->save();
+
+                    $t = new Template();
+                    $t->name = 'template_' . $template_basic;
+                    $t->label = 'Template Basic';
+                    $t->fieldgroup = $fg;
+                    $t->icon = 'Circle o';
+                    $t->tags = 'Templates';
+                    $t->save();
+                }
+            } else {
+                $t = $this->fieldgroups->get('template_' . $template_basic);
+                $t->add('matrix_basic');
+                $t->save();
+            }
+        }
+    }
+
+    /**
+     * uninstall the modul with the fields
+     *
+     * @return void
+     * @throws WireException
+     */
+    public function ___uninstall(): void
+    {
+        /**
+         * delete template files
+         */
+        foreach ($this->templates_basic as $template_basic) {
+            $template_basic = 'template_' . $template_basic;
+            $file = $this->config->paths->templates . $template_basic . '.php';
+
+            if (is_file($file)) {
+                $this->files->unlink($file);
+            }
+
+            if ( $this->templates->get($template_basic) ) {
+                $t = $this->fieldgroups->get($template_basic);
+                $t->deleteAll();
+                $t->save();
+
+                $this->templates->delete($this->templates->get($template_basic));
+            }
+        }
+
+        /**
+         * delete fields
+         */
+        $matrix_basic = $this->fields->get('matrix_basic');
+        $this->fields->delete($matrix_basic);
+
+        $this->helper_fields->deleteFields($this->fields_array);
+
+//        $this->modules->uninstall('CroppableImage3');
+    }
+}

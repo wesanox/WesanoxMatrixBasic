@@ -1,0 +1,90 @@
+<?php
+
+return [
+    [
+        'name' => 'checkbox_individual',
+        'type' => 'Checkbox',
+        'label' => 'Individuelle Containereinstellung?',
+        'tags' => 'settings',
+        'icon' => 'Check',
+        'width' => 25,
+        'formatter' => null,
+        'inputfieldClass' => null,
+    ],
+    [
+        'name' => 'select_width_column',
+        'type' => 'Options',
+        'label' => 'Spaltenbreite',
+        'tags' => 'settings',
+        'icon' => 'Check square o',
+        'width' => 25,
+        'options' => '
+                1=col-1
+                2=col-2
+                3=col-3
+                4=col-4
+                5=col-5
+                6=col-6
+                7=col-7
+                8=col-8
+                9=col-9
+                10=col-10 (für offset-2)
+                11=col-11 (für offset-1)
+                12=col
+                ',
+    ],
+    [
+        'name' => 'select_offset_column',
+        'type' => 'Options',
+        'label' => 'Spaltenabstand',
+        'tags' => 'settings',
+        'icon' => 'Check square o',
+        'width' => 25,
+        'options' => '
+                1=offset-1
+                2=offset-2
+                3=offset-3
+                4=offset-4
+                5=offset-5
+                6=offset-6
+                7=offset-7
+                8=offset-8
+                9=offset-9
+                ',
+    ],
+    [
+        'name' => 'repeater_content',
+        'type' => 'Repeater',
+        'label' => 'Repeater (Content)',
+        'tags' => 'repeater',
+        'icon' => 'Repeat',
+        'width' => 100,
+        'fields' => [
+            'select_width_column',
+            'select_offset_column',
+            'text_class',
+            'checkbox_individual',
+            'matrix_content'
+        ]
+    ],
+    [
+        'name' => 'matrix_basic',
+        'type' => 'RepeaterMatrix',
+        'label' => 'Matrix (Basic)',
+        'tags' => 'matrix',
+        'icon' => 'Codepen',
+        'addType' => 1,
+        'fields' => [
+            'repeater_content',
+        ],
+        'matrix_items' => [
+            [
+                'name' => 'basic_content',
+                'label' => 'Content Grid',
+                'fields' => [
+                    'repeater_content',
+                ]
+            ],
+        ]
+    ]
+];
