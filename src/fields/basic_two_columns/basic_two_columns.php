@@ -4,7 +4,7 @@ $anchor_id = ($page->anchor_id) ? ' id="' . $page->anchor_id . '"': '';
 $html_left = '';
 $html_right = '';
 
-foreach ($page->repeater_content_two_col as $content) {
+foreach ($page->repeater_two_col as $content) {
     $background_color = $page->getForPage()->getBackgroundColor($content->select_background_color);
     $container = ($content->checkbox_fw) ? '' : 'container_content_two_col';
     $css_class = ($content->text_class) ? ' ' . $content->text_class : '';

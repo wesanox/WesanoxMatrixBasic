@@ -68,6 +68,28 @@ return [
         ]
     ],
     [
+        'name' => 'repeater_slider',
+        'type' => 'Repeater',
+        'label' => 'Repeater (Slider)',
+        'tags' => 'repeater',
+        'icon' => 'Repeat',
+        'width' => 100,
+        'fields' => [
+            'matrix_content',
+        ]
+    ],
+    [
+        'name' => 'repeater_two_col',
+        'type' => 'Repeater',
+        'label' => 'Repeater (2 Spalten)',
+        'tags' => 'repeater',
+        'icon' => 'Repeat',
+        'width' => 100,
+        'fields' => [
+            'matrix_content',
+        ]
+    ],
+    [
         'name' => 'matrix_basic',
         'type' => 'RepeaterMatrix',
         'label' => 'Matrix (Basic)',
@@ -75,16 +97,68 @@ return [
         'icon' => 'Codepen',
         'addType' => 1,
         'fields' => [
+            'text_class',
+            'text_difference_desktop',
+            'text_difference_tablet',
+            'text_difference_mobile',
+            'checkbox_separator',
             'repeater_content',
+            'repeater_header_smooth',
+            'repeater_slider',
+            'repeater_two_col',
         ],
         'matrix_items' => [
             [
+                'name' => 'basic_header',
+                'label' => 'Header',
+                'fields' => [
+                    'repeater_header_smooth'
+                ]
+            ],
+            [
+                'name' => 'basic_breadcrumb',
+                'label' => 'Breadcrumb',
+                'fields' => []
+            ],
+            [
+                'name' => 'basic_separator',
+                'label' => 'Separator',
+                'fields' => [
+                    'text_class',
+                    'text_difference_desktop',
+                    'text_difference_tablet',
+                    'text_difference_mobile',
+                    'checkbox_separator',
+                ],
+            ],
+            [
                 'name' => 'basic_content',
-                'label' => 'Content Grid',
+                'label' => 'Grid',
                 'fields' => [
                     'repeater_content',
                 ]
             ],
+            [
+                'name' => 'basic_slider',
+                'label' => 'Slider',
+                'fields' => [
+                    'repeater_slider'
+                ]
+            ],
+            [
+                'name' => 'basic_smooth',
+                'label' => 'Smooth Boxes',
+                'fields' => [
+                    'repeater_smooth'
+                ]
+            ],
+            [
+                'name' => 'basic_two_columns',
+                'label' => 'Two Columns',
+                'fields' => [
+                    'repeater_two_col'
+                ]
+            ]
         ]
     ]
 ];

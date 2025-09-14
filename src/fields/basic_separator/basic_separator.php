@@ -1,0 +1,1 @@
+<?php echo $modules->get('WesanoxHelperClasses')->getSeparator($page->matrix('type'), $page->text_class, $page->text_difference_mobile, $page->text_difference_tablet, $page->text_difference_desktop, $page->checkbox_separator);
