@@ -53,6 +53,36 @@ return [
                 ',
     ],
     [
+        'name' => 'select_header_options',
+        'type' => 'Options',
+        'label' => 'Header Darstellung',
+        'tags' => 'settings',
+        'icon' => 'Check square o',
+        'width' => 100,
+        'defaultValue' => 1,
+        'required' => 1,
+        'options' => '
+                1=Bildslider (Standard)
+                2=Videoslider
+                3=Videoslider (Bild Cover)
+                4=Ein Video / Bildslider
+            ',
+    ],
+    [
+        'name' => 'int_slider',
+        'type' => 'Integer',
+        'label' => 'Slide - Anzahl',
+        'tags' => 'integer',
+        'icon' => 'calculator',
+        'width' => 100,
+        'zeroNotEmpty' => 0,
+        'defaultValue' => 2,
+        'inputType' => 'text',
+        'size' => 10,
+        'min' => 2,
+        'max' => 5,
+    ],
+    [
         'name' => 'repeater_content',
         'type' => 'Repeater',
         'label' => 'Repeater (Content)',
@@ -97,11 +127,19 @@ return [
         'icon' => 'Codepen',
         'addType' => 1,
         'fields' => [
+            'fieldset_video_content',
+            'fieldset_video_content_END',
             'text_class',
             'text_difference_desktop',
             'text_difference_tablet',
             'text_difference_mobile',
+            'file_video',
+            'file_video_subtitle',
+            'text_video_speaker',
+            'text_video_description',
+            'int_slider',
             'checkbox_separator',
+            'select_header_options',
             'repeater_content',
             'repeater_header_smooth',
             'repeater_slider',
@@ -112,6 +150,15 @@ return [
                 'name' => 'basic_header',
                 'label' => 'Header',
                 'fields' => [
+                    'select_header_options',
+                    'fieldset_video_content' => [
+                        'showIf' => 'select_header_options=4',
+                    ],
+                    'file_video',
+                    'file_video_subtitle',
+                    'text_video_speaker',
+                    'text_video_description',
+                    'fieldset_video_content_END',
                     'repeater_header_smooth'
                 ]
             ],
@@ -135,6 +182,7 @@ return [
                 'name' => 'basic_content',
                 'label' => 'Grid',
                 'fields' => [
+                    'image_background',
                     'repeater_content',
                 ]
             ],
@@ -142,6 +190,7 @@ return [
                 'name' => 'basic_slider',
                 'label' => 'Slider',
                 'fields' => [
+                    'int_slider',
                     'repeater_slider'
                 ]
             ],
@@ -149,7 +198,7 @@ return [
                 'name' => 'basic_smooth',
                 'label' => 'Smooth Boxes',
                 'fields' => [
-                    'repeater_smooth'
+                    'repeater_header_smooth'
                 ]
             ],
             [
