@@ -127,6 +127,11 @@ return [
         'icon' => 'Codepen',
         'addType' => 1,
         'fields' => [
+            'repeater_content',
+            'repeater_slider',
+            'repeater_two_col',
+            'repeater_header_smooth',
+            'image',
             'fieldset_video_content',
             'fieldset_video_content_END',
             'text_class',
@@ -140,10 +145,7 @@ return [
             'int_slider',
             'checkbox_separator',
             'select_header_options',
-            'repeater_content',
-            'repeater_header_smooth',
-            'repeater_slider',
-            'repeater_two_col',
+            'select_separator_options',
         ],
         'matrix_items' => [
             [
@@ -171,11 +173,24 @@ return [
                 'name' => 'basic_separator',
                 'label' => 'Separator',
                 'fields' => [
+                    'select_separator_options',
                     'text_class',
-                    'text_difference_desktop',
-                    'text_difference_tablet',
-                    'text_difference_mobile',
-                    'checkbox_separator',
+                    'text_difference_desktop'  => [
+                        'showIf' => 'select_separator_options=1',
+                    ],
+                    'text_difference_tablet'  => [
+                        'showIf' => 'select_separator_options=1',
+                    ],
+                    'text_difference_mobile'  => [
+                        'showIf' => 'select_separator_options=1',
+                    ],
+                    'checkbox_separator'  => [
+                        'showIf' => 'select_separator_options=1',
+                    ],
+                    'image' => [
+                        'width' => 100,
+                        'showIf' => 'select_separator_options=2|3|4',
+                    ]
                 ],
             ],
             [
