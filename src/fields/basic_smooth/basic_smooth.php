@@ -5,7 +5,7 @@
             ?>
             <div class="w-100 overflow-hidden snap-item"<?php echo $img; ?>>
                 <?php if ($item->file_video) : ?>
-                    <video class="position-absolute top-50 z-0 w-100 snap-item_video" autoplay muted loop playsinline>
+                    <video class="position-absolute top-50 z-0 h-100 snap-item_video" autoplay muted loop playsinline>
                         <source src='<?php echo $item->file_video->url; ?>' type='video/mp4'>
                     </video>
                 <?php endif; ?>
