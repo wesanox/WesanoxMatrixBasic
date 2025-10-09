@@ -1,0 +1,23 @@
+.basic_smooth {
+  .snap-item {
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 1rem;
+
+    &_overlay {
+      background: rgba(0,0,0,.5);
+    }
+
+    &_video {
+      transform: translateY(-50%);
+    }
+
+    &_content {
+      p {
+        padding: 1rem 0;
+      }
+    }
+  }
+}

@@ -78,6 +78,22 @@ class WesanoxMatrixBasic extends WireData implements Module
         $this->fields_array = include $this->config->paths->WesanoxMatrixBasic . 'config/fields.php';
     }
 
+    public function init()
+    {
+        $this->wire->addHookAfter("InputfieldRepeaterMatrix::renderAddMatrixCustom", function($event) {
+            if($event->object->getField()->name != "matrix_basic") return;
+
+            $style = "display:inline-block;background:#ccc;padding:40px;margin:5px";
+            $out = "";
+
+            foreach($event->arguments(0) as $type) {
+                bd($type);
+                $out .= "<a href='$type[href]' style='$style'>$type[label]</a>";
+            }
+            $event->return = [ "Select type to add", $out ];
+        });
+    }
+
     /**
      * install function for the modul
      *

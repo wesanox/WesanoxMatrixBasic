@@ -1,1 +1,1 @@
-<?php echo $modules->get('WesanoxHelperClasses')->getSeparator($page->matrix('type'), $page);
+<?php echo $modules->get('WesanoxHelperClasses')->getSeparator($page);
