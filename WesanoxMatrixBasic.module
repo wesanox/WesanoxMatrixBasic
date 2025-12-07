@@ -117,8 +117,7 @@ class WesanoxMatrixBasic extends WireData implements Module
          */
         foreach ($this->external_modules as $module_name => $module_url) {
             if (!$this->modules->isInstalled($module_name)) {
-                $message = $this->helper_classes->downloadInstall($module_name, $module_url);
-                if ($message !== true) $this->error($message);
+                $this->helper_classes->downloadInstall($module_name, $module_url);
             }
         }
 
