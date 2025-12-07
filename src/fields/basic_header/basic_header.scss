@@ -1,3 +1,47 @@
 .basic_header {
+  max-height: 100vh;
+  overflow: hidden;
 
+  &_swiper {
+    &-three {
+      .swiper-slide {
+        .video-button {
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+      }
+    }
+  }
+
+  .swiper-slide {
+    &-content {
+      background-color: rgba(0,0,0,.2);
+      top: 60%;
+      left: 10%;
+      color: white;
+      max-width: 40%;
+    }
+  }
+
+
+  video {
+    object-fit: cover;
+  }
+
+  .video-button {
+    .play-icon {
+      transform: translate(50%, -50%);
+    }
+
+    &:hover {
+      cursor: pointer;
+
+      .play-icon {
+        opacity: .8;
+        transition: ease all 0.3s;
+        cursor: pointer;
+      }
+    }
+  }
 }

@@ -2,6 +2,36 @@
 
 return [
     [
+        'name' => 'text_parallax_y',
+        'type' => 'Text',
+        'label' => 'Parallax Speed Y',
+        'tags' => 'text',
+        'icon' => 'File text o',
+        'width' => 25,
+        'formatter' => 'TextformatterEntities',
+        'inputfieldClass' => null,
+    ],
+    [
+        'name' => 'text_parallax_x',
+        'type' => 'Text',
+        'label' => 'Parallax Data Speed X',
+        'tags' => 'text',
+        'icon' => 'File text o',
+        'width' => 25,
+        'formatter' => 'TextformatterEntities',
+        'inputfieldClass' => null,
+    ],
+    [
+        'name' => 'text_label',
+        'type' => 'Text',
+        'label' => 'Modul Beschriftung',
+        'tags' => 'text',
+        'icon' => 'File text o',
+        'width' => 100,
+        'formatter' => 'TextformatterEntities',
+        'inputfieldClass' => null,
+    ],
+    [
         'name' => 'checkbox_individual',
         'type' => 'Checkbox',
         'label' => 'Individuelle Containereinstellung?',
@@ -89,6 +119,7 @@ return [
         'tags' => 'repeater',
         'icon' => 'Repeat',
         'width' => 100,
+        'rememberOpen' => 1,
         'fields' => [
             'select_width_column',
             'select_offset_column',
@@ -120,18 +151,56 @@ return [
         ]
     ],
     [
+        'name' => 'repeater_parallax_images',
+        'type' => 'Repeater',
+        'label' => 'Repeater (Parallax Images)',
+        'tags' => 'repeater',
+        'icon' => 'Repeat',
+        'width' => 100,
+        'fields' => [
+            'image',
+            'text_parallax_y',
+            'text_parallax_x',
+        ]
+    ],
+    [
+        'name' => 'image_background',
+        'type' => 'CroppableImage3',
+        'label' => 'Hintergrundbild',
+        'tags' => 'images',
+        'icon' => 'File image o',
+        'width' => 50,
+        'maxFiles' => 1,
+        'defaultValuePage' => 0,
+        'gridMode' => 'list',
+        'clientQuality' => 90,
+        'extensions' => 'jpg jpeg png',
+        'inputfieldClass' => 'InputfieldCroppableImage3',
+        'cropSetting' =>
+            <<<EOT
+                desktop,1920,1080
+                tablet,1024,600
+                mobile,600,600
+                quadratisch,750,750
+                EOT,
+    ],
+    [
         'name' => 'matrix_basic',
         'type' => 'RepeaterMatrix',
         'label' => 'Matrix (Basic)',
         'tags' => 'matrix',
         'icon' => 'Codepen',
         'addType' => 1,
+        'rememberOpen' => 1,
         'fields' => [
             'repeater_content',
             'repeater_slider',
             'repeater_two_col',
             'repeater_header_smooth',
+            'repeater_parallax_images',
+            'text_label',
             'image',
+            'image_background',
             'fieldset_video_content',
             'fieldset_video_content_END',
             'text_class',
@@ -146,6 +215,7 @@ return [
             'checkbox_separator',
             'select_header_options',
             'select_separator_options',
+            'matrix_content'
         ],
         'matrix_items' => [
             [
@@ -173,18 +243,19 @@ return [
                 'name' => 'basic_separator',
                 'label' => 'Separator',
                 'fields' => [
+                    'text_label',
                     'select_separator_options',
                     'text_class',
-                    'text_difference_desktop'  => [
+                    'text_difference_desktop' => [
                         'showIf' => 'select_separator_options=1',
                     ],
-                    'text_difference_tablet'  => [
+                    'text_difference_tablet' => [
                         'showIf' => 'select_separator_options=1',
                     ],
-                    'text_difference_mobile'  => [
+                    'text_difference_mobile' => [
                         'showIf' => 'select_separator_options=1',
                     ],
-                    'checkbox_separator'  => [
+                    'checkbox_separator' => [
                         'showIf' => 'select_separator_options=1',
                     ],
                     'image' => [
@@ -197,7 +268,9 @@ return [
                 'name' => 'basic_content',
                 'label' => 'Grid',
                 'fields' => [
+                    'text_label',
                     'image_background',
+                    'text_class',
                     'repeater_content',
                 ]
             ],
@@ -205,6 +278,7 @@ return [
                 'name' => 'basic_slider',
                 'label' => 'Slider',
                 'fields' => [
+                    'text_label',
                     'int_slider',
                     'repeater_slider'
                 ]
@@ -213,6 +287,7 @@ return [
                 'name' => 'basic_smooth',
                 'label' => 'Smooth Boxes',
                 'fields' => [
+                    'text_label',
                     'repeater_header_smooth'
                 ]
             ],
@@ -220,7 +295,17 @@ return [
                 'name' => 'basic_two_columns',
                 'label' => 'Two Columns',
                 'fields' => [
+                    'text_label',
                     'repeater_two_col'
+                ]
+            ],
+            [
+                'name' => 'basic_parallax',
+                'label' => 'Parallax',
+                'fields' => [
+                    'text_label',
+                    'repeater_parallax_images',
+                    'matrix_content'
                 ]
             ]
         ]

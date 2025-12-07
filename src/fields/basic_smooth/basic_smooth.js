@@ -1,67 +1,97 @@
 document.addEventListener('DOMContentLoaded', function () {
-
-    const stickyScrollConfig = {
-        enabled: true,          // Master switch to enable/disable the sticky scroll effect
+    const baseConfig = {
+        enabled: true,
         containerSelector: '.smooth_scroll',
         itemSelector: '.snap-item',
-        stickyOffsetTop: 120,      // Top offset for sticky position in pixels.
-        stickyOffsetBottom: 120,     // Bottom offset to create a "window" for the sticky item. The item's height will be calculated based on this and the top offset.
-        itemGap: 50              // The amount of scroll (in pixels) to "pause" between one item sticking and the next one starting to scroll over it.
+        stickyOffsetTop: 120,
+        stickyOffsetBottom: 120,
+        itemGap: 50
     };
 
-    /**
-     * Initializes the sticky scroll effect
-     * @param {object} config - The configuration object for the sticky scroll effect.
-     */
-    function initStickyScroll(config) {
-        if (!config.enabled) {
-            return;
-        }
+    function getNumberAttr(el, name, fallback) {
+        const v = el.getAttribute(name);
+        return v != null && v !== '' && !isNaN(+v) ? +v : fallback;
+    }
 
-        const container = document.querySelector(config.containerSelector);
-        if (!container) {
-            console.warn(`Sticky scroll container not found: ${config.containerSelector}`);
-            return;
-        }
+    function measureCalcHeight(calcStr) {
+        const tmp = document.createElement('div');
+        tmp.style.height = calcStr;
+        tmp.style.position = 'absolute';
+        tmp.style.visibility = 'hidden';
+        tmp.style.pointerEvents = 'none';
+        document.body.appendChild(tmp);
+        const px = tmp.offsetHeight;
+        document.body.removeChild(tmp);
+        return px;
+    }
+
+    function initStickyScrollForContainer(container, defaults) {
+        if (container.dataset.stickyInit === '1') return;
+        container.dataset.stickyInit = '1';
+
+        const config = {
+            ...defaults,
+            stickyOffsetTop:   getNumberAttr(container, 'data-sticky-top', defaults.stickyOffsetTop),
+            stickyOffsetBottom:getNumberAttr(container, 'data-sticky-bottom', defaults.stickyOffsetBottom),
+            itemGap:           getNumberAttr(container, 'data-item-gap', defaults.itemGap)
+        };
 
         const items = container.querySelectorAll(config.itemSelector);
-        if (items.length === 0) {
-            return;
-        }
+        if (!items.length) return;
 
-        // Inject spacer divs between items to create a reliable scroll pause.
-        items.forEach((item, index) => {
-            if (index < items.length - 1) { // No spacer after the last item.
+        items.forEach((item, i) => {
+            if (i < items.length - 1) {
                 const spacer = document.createElement('div');
+                spacer.className = 'sticky-spacer';
                 spacer.style.height = `${config.itemGap}px`;
                 item.insertAdjacentElement('afterend', spacer);
             }
         });
 
-        // 1. Calculate the dynamic height of each item and the total container height.
-        const itemHeightCalc = `calc(100vh - ${config.stickyOffsetTop}px - ${config.stickyOffsetBottom}px)`;
-        const totalGapHeight = (items.length - 1) * config.itemGap;
+        const applyLayout = () => {
+            const itemHeightCalc = `calc(100vh - ${config.stickyOffsetTop}px - ${config.stickyOffsetBottom}px)`;
 
-        // Set the container height.
-        // Create a temporary item to measure its height.
-        const tempItem = document.createElement('div');
-        tempItem.style.height = itemHeightCalc;
-        tempItem.style.position = 'absolute';
-        tempItem.style.visibility = 'hidden';
-        document.body.appendChild(tempItem);
-        const itemHeightInPixels = tempItem.offsetHeight;
-        document.body.removeChild(tempItem);
+            items.forEach(item => {
+                item.style.height = itemHeightCalc;
+                item.style.position = 'sticky';
+                item.style.top = `${config.stickyOffsetTop}px`;
+                item.style.willChange = 'transform'; // micro-optimierung
+                item.style.overflow = 'hidden';
+            });
+        };
 
+        applyLayout();
 
-        // 2. Apply sticky positioning and individual styles to each item.
-        items.forEach((item, index) => {
-            item.style.height = itemHeightCalc;
-            item.style.position = 'sticky';
-            item.style.top = `${config.stickyOffsetTop}px`;
+        let rAF;
+        const onResize = () => {
+            if (rAF) cancelAnimationFrame(rAF);
+            rAF = requestAnimationFrame(applyLayout);
+        };
+        window.addEventListener('resize', onResize);
+        window.addEventListener('orientationchange', onResize);
+
+        // Cleanup, falls du SPA/Navigo/htmx verwendest:
+        container.addEventListener('sticky:destroy', () => {
+            window.removeEventListener('resize', onResize);
+            window.removeEventListener('orientationchange', onResize);
+            container.querySelectorAll('.sticky-spacer').forEach(n => n.remove());
+            items.forEach(item => {
+                item.style.height = '';
+                item.style.position = '';
+                item.style.top = '';
+                item.style.willChange = '';
+                item.style.overflow = '';
+            });
+            container.dataset.stickyInit = '0';
         });
     }
 
-    // Initialize the component with the configuration
-    initStickyScroll(stickyScrollConfig);
+    function initAll() {
+        if (!baseConfig.enabled) return;
+        document.querySelectorAll(baseConfig.containerSelector).forEach(container => {
+            initStickyScrollForContainer(container, baseConfig);
+        });
+    }
 
+    initAll();
 });

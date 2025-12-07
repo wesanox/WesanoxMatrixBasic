@@ -1,0 +1,8 @@
+.basic_breadcrumb {
+  nav {
+    li + li::before {
+      content: "›";
+      margin-right: .75rem;
+    }
+  }
+}

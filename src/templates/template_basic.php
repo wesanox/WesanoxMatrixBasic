@@ -1,3 +1,4 @@
+<?php namespace ProcessWire; ?>
 <div id="content">
-    <?php echo $modules->get('WesanoxHelperClasses')->renderMatrix('basic', $page->matrix_basic,  'section'); ?>
+    <?php echo wire()->modules->WesanoxHelperClasses->renderMatrix('basic', wire()->page->matrix_basic,  'section'); ?>
 </div>
